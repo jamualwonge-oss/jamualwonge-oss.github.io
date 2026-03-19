@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Random Maths Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin-bottom: 80px; /* space for footer */
+    padding: 20px;
+  }
+  input[type="number"] {
+    width: 60px;
+  }
+  button {
+    margin: 5px;
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  /* Footer menu */
+  .footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #222;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .footer a {
+    color: white;
+    text-decoration: none;
+  }
+  /* Timer */
+  #timer {
+    font-size: 36px;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<h2>Random Maths Quiz</h2>
+
+<div id="timer">0</div>
+<div>
+  <button onclick="startTimer(60)">60s</button>
+  <button onclick="startTimer(20)">20s</button>
+  <button onclick="startTimer(10)">10s</button>
+</div>
+
+<form id="quizForm">
+</form>
+
+<button type="button" onclick="checkAnswers()">Submit</button>
+<h3 id="result"></h3>
+
+<div class="footer">
+  <a href="myapp.html">Home</a>
+  <a href="myapptimer.html">Timer</a>
+  <a href="myappquiz.html">Quiz</a>
+</div>
+
+<script>
+let questions = [];
+const operators = ['+', '-', '×', '÷'];
+
+// Generate 10 random questions
+function generateQuestions() {
+  questions = [];
+  const form = document.getElementById('quizForm');
+  form.innerHTML = '';
+  
+  for (let i = 1; i <= 10; i++) {
+    let num1 = Math.floor(Math.random() * 20) + 1;
+    let num2 = Math.floor(Math.random() * 20) + 1;
+    let op = operators[Math.floor(Math.random() * operators.length)];
+    
+    // Avoid division by zero
+    if (op === '÷') {
+      num2 = Math.floor(Math.random() * 10) + 1;
+      num1 = num2 * Math.floor(Math.random() * 10 + 1); // ensure divisible
+    }
+
+    questions.push({num1, num2, op});
+    
+    const p = document.createElement('p');
+    p.innerHTML = `${i}. ${num1} ${op} ${num2} = <input type="number" id="q${i}">`;
+    form.appendChild(p);
+  }
+}
+
+// Calculate the answer for a question
+function getAnswer(q) {
+  switch(q.op) {
+    case '+': return q.num1 + q.num2;
+    case '-': return q.num1 - q.num2;
+    case '×': return q.num1 * q.num2;
+    case '÷': return q.num1 / q.num2;
+  }
+}
+
+// Check user's answers
+function checkAnswers() {
+  let score = 0;
+  for (let i = 0; i < questions.length; i++) {
+    let userAns = parseFloat(document.getElementById(`q${i+1}`).value);
+    if (userAns === getAnswer(questions[i])) score++;
+  }
+  document.getElementById('result').innerText = `You scored ${score}/10`;
+}
+
+// Timer logic
+let timerInterval;
+let time = 0;
+let maxTime = 60;
+
+function startTimer(seconds) {
+  clearInterval(timerInterval);
+  time = 0;
+  maxTime = seconds;
+  document.getElementById('timer').style.color = 'black';
+  document.getElementById('timer').textContent = time;
+  
+  timerInterval = setInterval(() => {
+    time++;
+    document.getElementById('timer').textContent = time;
+    if (time >= maxTime) {
+      clearInterval(timerInterval);
+      document.getElementById('timer').style.color = 'red';
+    }
+  }, 1000);
+}
+
+// Initialize quiz on page load
+generateQuestions();
+</script>
+
+</body>
+</html>
