@@ -1,0 +1,26 @@
+<!-- MENU FOOTER -->
+<div id="menu-footer" style="position:fixed; bottom:0; width:100%; display:flex; justify-content:space-around; background:#1976d2; padding:10px 0;">
+  <button onclick="showPage('timer-page', this)" style="flex:1; margin:0 5px; padding:10px; color:white; background:#2196f3;">Timer</button>
+  <button onclick="showPage('calculator-page', this)" style="flex:1; margin:0 5px; padding:10px; color:white; background:#2196f3;">Calculator</button>
+  <button onclick="showPage('quiz-page', this)" style="flex:1; margin:0 5px; padding:10px; color:white; background:#2196f3;">Quiz</button>
+</div>
+
+<script>
+  // Function to show the selected page and hide others
+  function showPage(pageId, btn) {
+    // Hide all pages
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    // Show selected page
+    document.getElementById(pageId).style.display = 'flex';
+
+    // Optional: highlight active button
+    document.querySelectorAll('#menu-footer button').forEach(b => b.style.background = '#2196f3');
+    btn.style.background = '#1565c0';
+  }
+
+  // Initialize first page
+  document.addEventListener('DOMContentLoaded', () => {
+    const firstButton = document.querySelector('#menu-footer button');
+    if (firstButton) firstButton.click();
+  });
+</script>
